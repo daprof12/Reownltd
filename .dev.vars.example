@@ -1,0 +1,6 @@
+# Local development secrets for `npm run dev` — copy to .dev.vars
+ADMIN_PASSWORD=reown-admin
+SESSION_SECRET=local-dev-secret
+# Optional: email alerts for new leads via https://resend.com
+# RESEND_API_KEY=
+# MAIL_FROM=Reown Website <website@reownltd.com>

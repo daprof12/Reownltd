@@ -1,69 +1,62 @@
-# Deploying the Reown website to Render
+# Deploying the Reown website to Cloudflare
 
-**Cost:** about **$7.25/month**. That covers the Render Starter web service and a 1 GB persistent disk. You need the disk so your content, leads, subscribers and uploaded images survive restarts and redeploys. Render's free plan has no disk, so everything you edit in the CMS would be lost.
+The site runs on **Cloudflare Workers** (free plan):
 
-The project already has everything Render needs:
-- **`render.yaml`**: a one-click "Blueprint" that sets up the server, disk, health check and settings
-- **`/healthz`**: a health check, so Render only switches to a new version once it works
-- **`.gitignore`**: keeps private data (leads, subscribers, `.env`) out of GitHub
+| Piece | Cloudflare product | Free-plan limits |
+|---|---|---|
+| Pages, CMS and API | Workers | 100,000 requests/day, 10 ms CPU per request |
+| CSS, JS and images in `/public` | Workers Static Assets (CDN) | Unlimited, and doesn't count as requests |
+| Content, leads and subscribers | D1 (SQLite) database `reown-db` | 5 GB storage, 5M reads/day |
+| CMS uploads (images, PDFs) | Workers KV namespace `MEDIA` | 1 GB storage, 1,000 uploads/day |
 
----
+**Upgrade later:** the **Workers Paid plan costs $5/month**. It raises the CPU limit to 30 s and the request limit to 10M per month. Upgrade if the Cloudflare dashboard shows "Exceeded CPU" errors.
 
-## Step 1 — Put the code on GitHub (5 min)
-1. Sign in at **https://github.com** (create a free account if needed).
-2. Go to **https://github.com/new** and fill it in:
-   - Repository name: `reown-website`
-   - Visibility: **Private**
-   - Do **not** add a README, .gitignore or licence.
-3. Click **Create repository** and copy its URL (e.g. `https://github.com/YOUR-NAME/reown-website.git`).
-4. Push the code from this folder:
-   ```powershell
-   git commit -m "Reown website"
-   git remote add origin https://github.com/YOUR-NAME/reown-website.git
-   git push -u origin main
-   ```
-   The first time, Windows will open a GitHub sign-in window.
+## How deploys work
+The GitHub repo `daprof12/Reownltd` is connected to Cloudflare Workers Builds. Every `git push` to `main`:
+1. runs `npm clean-install`
+2. runs `npx wrangler deploy`, which first precompiles the EJS templates (`scripts/build-templates.js`) and then uploads the Worker and the `/public` files.
 
-## Step 2 — Create the service on Render (10 min)
-1. Go to **https://dashboard.render.com** and sign up with **GitHub**.
-2. Click **New → Blueprint**.
-3. Connect your GitHub account and pick the `reown-website` repository.
-4. Render reads `render.yaml` and asks for a few values:
-   - **ADMIN_PASSWORD**: choose a strong password (12+ characters) for the CMS.
-   - **SMTP_\***: you can leave these empty for now. They only send you an email for each new lead.
-5. Add a payment card when asked. The disk needs a paid plan.
-6. Click **Apply**. The first deploy takes 2–4 minutes.
-7. Open the link Render gives you (e.g. `https://reown-website.onrender.com`).
-8. Sign in at `/admin` with username `admin` and your password.
+On the first visit, the D1 tables are created and filled with the default content automatically.
 
-> The live site starts from the built-in default content, which already includes your RC number and address. Any edits you made in the local CMS are **not** copied over, so make your real edits on the live CMS.
+## Database and media storage
+You don't need to create anything by hand. `wrangler.jsonc` declares the D1 database `reown-db` and the KV namespace `MEDIA` without IDs. On the first deploy, Wrangler creates both automatically and links them to the Worker. Later deploys reuse them.
 
-## Step 3 — Connect reownltd.com (15 min + DNS wait)
-1. In Render, open the service, go to **Settings → Custom Domains**, and add both `www.reownltd.com` and `reownltd.com`.
-2. At your domain registrar's DNS settings, add the records Render shows you. They are usually:
+## Secrets
+Set these in the Cloudflare dashboard (**Workers & Pages → reownltd → Settings → Variables and Secrets**, type **Secret**) or with Wrangler:
+```powershell
+npx wrangler secret put ADMIN_PASSWORD
+```
+```powershell
+npx wrangler secret put SESSION_SECRET
+```
 
-   | Type | Name / Host | Value |
-   |---|---|---|
-   | CNAME | `www` | `reown-website.onrender.com` |
-   | A | `@` | `216.24.57.1` |
+| Secret | Purpose |
+|---|---|
+| `ADMIN_PASSWORD` | CMS login password (username `admin`). The CMS stays locked until it is set |
+| `SESSION_SECRET` | Long random string that signs the login cookie |
+| `RESEND_API_KEY` | *Optional.* Emails each new lead to you through [resend.com](https://resend.com) (free plan: 3,000 emails/month) |
+| `MAIL_FROM` | *Optional.* Sender address for those emails, e.g. `Reown Website <website@reownltd.com>` |
 
-   Remove any old A/AAAA/CNAME records for `@` and `www` that point somewhere else. **Keep** your MX records, or email to info@reownltd.com will stop working.
-3. Wait until Render shows **Verified** (minutes to a few hours). The HTTPS certificate is issued automatically.
+## Connect reownltd.com
+1. Add `reownltd.com` to Cloudflare: go to **Websites → Add a site** and choose the Free plan. Cloudflare then gives you two nameservers. Set them at your domain registrar, replacing the current ones.
+2. Wait until the domain shows **Active** in Cloudflare. This takes minutes to a few hours.
+3. Open **Workers & Pages → reownltd → Settings → Domains & Routes → Add → Custom domain**. Add `www.reownltd.com`, then add `reownltd.com` the same way.
+4. HTTPS is issued automatically.
 
-## Step 4 — After going live
-- **CMS → Settings & SEO:**
-  - Confirm the Website URL is `https://www.reownltd.com`.
-  - Add your phone, WhatsApp, booking link and social links.
-- **Google Search Console** (https://search.google.com/search-console):
-  - Add the domain and paste the verification code into the CMS.
-  - Submit `https://www.reownltd.com/sitemap.xml`.
-- **Bing Webmaster Tools:** do the same there. You can import directly from Google.
-- **Google Analytics 4:** create a property and paste the `G-…` ID into the CMS.
-- **Lead emails (optional):** on Render, open **Environment** and fill in `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` and `SMTP_FROM`. You can use the details of your info@reownltd.com mailbox, or a free Brevo SMTP account.
+Before switching nameservers, check that Cloudflare imported your **MX records**, or email to info@reownltd.com will stop working.
 
-## Updating the site later
-Any code change pushed to GitHub (`git push`) redeploys automatically. Content edits in the CMS are live immediately and need no redeploy.
+## Local development
+```powershell
+npm install
+```
+```powershell
+copy .dev.vars.example .dev.vars
+```
+```powershell
+npm run dev
+```
+Then open http://localhost:8787. Locally, D1 and KV are simulated in `.wrangler/`.
 
 ## Backups
-- Render takes **daily snapshots** of the disk and keeps them for 7 days. You can restore them from the Disk tab.
+- D1 has **Time Travel**: you can restore the database to any minute in the last 30 days with `npx wrangler d1 time-travel restore reown-db --timestamp=...`.
 - Export **Leads** and **Subscribers** to CSV from the CMS regularly.

@@ -1,9 +1,12 @@
 node_modules/
 .env
+.dev.vars
+.wrangler/
 .claude/settings.local.json
 
-# Live content, leads and subscribers — never commit (private data)
-data/*
-!data/.gitkeep
-uploads/*
-!uploads/.gitkeep
+# Generated at build time by scripts/build-templates.js
+src/templates.gen.mjs
+
+# Old local Node data (no longer used)
+data/
+uploads/
