@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: p.title, lead: p.summary, eyebrow: 'Case study · ' + p.industry, crumbs: [{ name: 'Portfolio', url: '/portfolio' }, { name: p.title }] }) %>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="reveal"><%- include('partials/cover', { item: p, big: true, eager: true }) %></div>
+    <div class="facts reveal">
+      <div><span>Client</span><strong><%= p.client %></strong></div>
+      <div><span>Industry</span><strong><%= p.industry %></strong></div>
+      <div><span>Service</span><strong><%= p.category %></strong></div>
+      <div><span>Year</span><strong><%= p.year %></strong></div>
+    </div>
+    <% if (p.results && p.results.length) { %>
+      <div class="results reveal"><% p.results.forEach(function(r){ %><div><strong><%= r.value %></strong><span><%= r.label %></span></div><% }) %></div>
+    <% } %>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container narrow">
+    <article class="prose reveal"><%- md(p.body) %></article>
+    <% if (p.tags && p.tags.length) { %><p class="tags"><% p.tags.forEach(function(t){ %><span class="pill"><%= t %></span><% }) %></p><% } %>
+    <div class="inline-cta reveal">
+      <div><h3>Want results like these?</h3><p>Let’s talk about your project — free consultation, no obligation.</p></div>
+      <button class="btn btn-orange" data-open-contact>Start your project <%- icon('arrow') %></button>
+    </div>
+  </div>
+</section>
+
+<% if (others.length) { %>
+<section class="section section-alt">
+  <div class="container">
+    <header class="sec-head reveal"><h2 class="h2">More projects</h2></header>
+    <div class="pf-grid"><% others.forEach(function(x, i){ %><%- include('partials/project-card', { p: x, i: i }) %><% }) %></div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

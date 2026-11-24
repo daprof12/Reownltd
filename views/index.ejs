@@ -1,0 +1,261 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<% var h = sec.hero; if (h.enabled) { %>
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="grid-bg"></div>
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+    <svg class="hero-swoosh" viewBox="0 0 1440 320" preserveAspectRatio="none"><path d="M0 260 C 360 320, 720 120, 1440 40" /><path class="s2" d="M0 300 C 420 330, 900 200, 1440 120" /></svg>
+  </div>
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow fade-up"><span class="dot"></span><%= h.eyebrow %></p>
+      <h1 id="heroTitle" class="fade-up d1"><%= h.title %>
+        <span class="rotator" data-words='<%= JSON.stringify(h.rotatingWords || []) %>'><span class="rot-word"><%= (h.rotatingWords||[''])[0] %></span><span class="caret"></span></span>
+      </h1>
+      <p class="lead fade-up d2"><%= h.subtitle %></p>
+      <div class="hero-ctas fade-up d3">
+        <button class="btn btn-orange btn-lg" data-open-contact><%= h.ctaPrimary %> <%- icon('arrow') %></button>
+        <a class="btn btn-ghost btn-lg" href="#portfolio"><%= h.ctaSecondary %></a>
+      </div>
+      <div class="hero-trust fade-up d4">
+        <div class="avatars" aria-hidden="true"><span><%- icon('gov') %></span><span><%- icon('bank') %></span><span><%- icon('health') %></span><span><%- icon('truck') %></span></div>
+        <p><%= h.trustLine %></p>
+      </div>
+    </div>
+
+    <div class="hero-visual fade-in d2" aria-hidden="true">
+      <div class="orbit o1"><span class="chip-orb c1"><%- icon('ai') %><em>AI</em></span><span class="chip-orb c2"><%- icon('blockchain') %><em>Blockchain</em></span><span class="chip-orb c3"><%- icon('shield') %><em>Security</em></span></div>
+      <div class="orbit o2"><span class="chip-orb c4"><%- icon('mobile') %><em>Mobile</em></span><span class="chip-orb c5"><%- icon('api') %><em>APIs</em></span><span class="chip-orb c6"><%- icon('chip') %><em>Hardware</em></span></div>
+      <div class="core">
+        <div class="core-glow"></div>
+        <img src="/img/logo-mark.webp" alt="" width="300" height="200" fetchpriority="high">
+      </div>
+      <div class="px-field"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+  <a href="#about" class="scroll-hint" aria-label="Scroll to about"><span></span></a>
+</section>
+<% } %>
+
+<% if (sec.stats.enabled) { %>
+<section class="stats-wrap" aria-label="Key figures">
+  <div class="container">
+    <div class="stats reveal">
+      <% sec.stats.items.forEach(function(st){ %>
+        <div class="stat"><strong><span class="count" data-to="<%= st.value %>">0</span><%= st.suffix %></strong><span><%= st.label %></span></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% var a = sec.about; if (a.enabled) { %>
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about" aria-labelledby="aboutTitle">
+  <div class="container about">
+    <div class="about-visual reveal-left">
+      <div class="about-card main">
+        <img src="/img/logo-full.webp" alt="Reown Ltd logo" width="2000" height="667" loading="lazy">
+        <p class="tag"><%= s.tagline %></p>
+      </div>
+      <div class="about-card mini m1"><%- icon('spark') %><div><strong>Mission</strong><p><%= a.mission %></p></div></div>
+      <div class="about-card mini m2"><%- icon('globe') %><div><strong>Vision</strong><p><%= a.vision %></p></div></div>
+    </div>
+    <div class="about-copy reveal-right">
+      <p class="eyebrow"><%= a.eyebrow %></p>
+      <h2 id="aboutTitle" class="h2"><%= a.title %></h2>
+      <div class="prose"><%- md(a.body) %></div>
+      <ul class="ticks">
+        <% a.points.forEach(function(p){ %><li><%- icon('check') %> <%= p %></li><% }) %>
+      </ul>
+      <div class="values">
+        <% var vi = {Integrity:'shield',Innovation:'spark',Partnership:'users',Excellence:'energy'}; a.values.forEach(function(v){ %>
+          <span class="value"><%- icon(vi[v] || 'check') %><%= v %></span>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.servicesIntro.enabled) { %>
+<!-- ============ SERVICES ============ -->
+<section class="section section-alt" id="services" aria-labelledby="svcTitle">
+  <div class="container">
+    <header class="sec-head reveal">
+      <p class="eyebrow"><%= sec.servicesIntro.eyebrow %></p>
+      <h2 id="svcTitle" class="h2"><%= sec.servicesIntro.title %></h2>
+      <p class="sub"><%= sec.servicesIntro.subtitle %></p>
+    </header>
+    <div class="svc-grid">
+      <% services.forEach(function(sv, i){ %>
+        <a class="svc-card reveal tilt" style="--d:<%= (i % 4) * 70 %>ms" href="/services/<%= sv.slug %>">
+          <span class="svc-ic"><%- icon(sv.icon) %></span>
+          <h3><%= sv.title %></h3>
+          <p><%= sv.summary %></p>
+          <ul><% (sv.features||[]).slice(0,3).forEach(function(f){ %><li><%= f %></li><% }) %></ul>
+          <span class="more">Learn more <%- icon('arrow') %></span>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.industries.enabled) { %>
+<!-- ============ INDUSTRIES ============ -->
+<section class="section" id="industries" aria-labelledby="indTitle">
+  <div class="container">
+    <header class="sec-head sec-head-row reveal">
+      <div>
+        <p class="eyebrow"><%= sec.industries.eyebrow %></p>
+        <h2 id="indTitle" class="h2"><%= sec.industries.title %></h2>
+        <% if (sec.industries.subtitle) { %><p class="sub"><%= sec.industries.subtitle %></p><% } %>
+      </div>
+      <a class="btn btn-ghost" href="/industries">All industries <%- icon('arrow') %></a>
+    </header>
+    <div class="ind-grid">
+      <% navIndustries.forEach(function(it, i){ %><%- include('partials/industry-card', { it: it, i: i }) %><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.process.enabled) { %>
+<!-- ============ PROCESS ============ -->
+<section class="section section-navy" id="process" aria-labelledby="procTitle">
+  <div class="container">
+    <header class="sec-head reveal">
+      <p class="eyebrow light"><%= sec.process.eyebrow %></p>
+      <h2 id="procTitle" class="h2"><%= sec.process.title %></h2>
+    </header>
+    <ol class="process">
+      <% sec.process.items.forEach(function(st, i){ %>
+        <li class="reveal" style="--d:<%= i * 110 %>ms"><span class="num"><%= String(i+1).padStart(2,'0') %></span><h3><%= st.title %></h3><p><%= st.text %></p></li>
+      <% }) %>
+    </ol>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.portfolioIntro.enabled && projects.length) { %>
+<!-- ============ PORTFOLIO ============ -->
+<section class="section" id="portfolio" aria-labelledby="pfTitle">
+  <div class="container">
+    <header class="sec-head sec-head-row reveal">
+      <div>
+        <p class="eyebrow"><%= sec.portfolioIntro.eyebrow %></p>
+        <h2 id="pfTitle" class="h2"><%= sec.portfolioIntro.title %></h2>
+        <p class="sub"><%= sec.portfolioIntro.subtitle %></p>
+      </div>
+      <a class="btn btn-ghost" href="/portfolio">View all projects <%- icon('arrow') %></a>
+    </header>
+    <div class="pf-grid">
+      <% projects.forEach(function(p, i){ %>
+        <%- include('partials/project-card', { p: p, i: i }) %>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.whyUs.enabled) { %>
+<!-- ============ WHY US ============ -->
+<section class="section section-alt" id="why" aria-labelledby="whyTitle">
+  <div class="container">
+    <header class="sec-head reveal">
+      <p class="eyebrow"><%= sec.whyUs.eyebrow %></p>
+      <h2 id="whyTitle" class="h2"><%= sec.whyUs.title %></h2>
+    </header>
+    <div class="why-grid">
+      <% sec.whyUs.items.forEach(function(w, i){ %>
+        <article class="why reveal" style="--d:<%= (i % 3) * 80 %>ms"><span class="why-ic"><%- icon(w.icon) %></span><div><h3><%= w.title %></h3><p><%= w.text %></p></div></article>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.tech.enabled) { %>
+<section class="tech" aria-label="<%= sec.tech.title %>">
+  <p class="tech-title"><%= sec.tech.title %></p>
+  <div class="marquee"><div class="track">
+    <% [0,1].forEach(function(k){ sec.tech.items.forEach(function(t){ %><span <%- k ? 'aria-hidden="true"' : '' %>><%= t %></span><% }) }) %>
+  </div></div>
+</section>
+<% } %>
+
+<% if (sec.testimonials.enabled) { %>
+<section class="section" id="testimonials" aria-labelledby="tTitle">
+  <div class="container">
+    <header class="sec-head reveal"><p class="eyebrow"><%= sec.testimonials.eyebrow %></p><h2 id="tTitle" class="h2"><%= sec.testimonials.title %></h2></header>
+    <div class="t-grid">
+      <% sec.testimonials.items.forEach(function(t, i){ %>
+        <figure class="testi reveal" style="--d:<%= i * 80 %>ms"><blockquote>“<%= t.quote %>”</blockquote><figcaption><strong><%= t.name %></strong><span><%= t.role %></span></figcaption></figure>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.cta.enabled) { %>
+<!-- ============ CTA ============ -->
+<section class="section cta-sec" aria-labelledby="ctaTitle">
+  <div class="container">
+    <div class="cta-box reveal">
+      <div class="cta-deco" aria-hidden="true"><span></span><span></span><span></span></div>
+      <h2 id="ctaTitle"><%= sec.cta.title %></h2>
+      <p><%= sec.cta.body %></p>
+      <div class="cta-btns">
+        <button class="btn btn-orange btn-lg" data-open-contact><%= sec.cta.button %> <%- icon('arrow') %></button>
+        <% if (s.bookingUrl) { %><a class="btn btn-ghost-light btn-lg" href="<%= s.bookingUrl %>" target="_blank" rel="noopener"><%- icon('calendar') %> <%= sec.cta.secondary %></a>
+        <% } else if (s.email) { %><a class="btn btn-ghost-light btn-lg" href="mailto:<%= s.email %>"><%- icon('mail') %> <%= s.email %></a><% } %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (sec.blogIntro.enabled && posts.length) { %>
+<!-- ============ BLOG ============ -->
+<section class="section" id="blog" aria-labelledby="blogTitle">
+  <div class="container">
+    <header class="sec-head sec-head-row reveal">
+      <div>
+        <p class="eyebrow"><%= sec.blogIntro.eyebrow %></p>
+        <h2 id="blogTitle" class="h2"><%= sec.blogIntro.title %></h2>
+        <p class="sub"><%= sec.blogIntro.subtitle %></p>
+      </div>
+      <a class="btn btn-ghost" href="/blog">All articles <%- icon('arrow') %></a>
+    </header>
+    <div class="post-grid">
+      <% posts.forEach(function(p, i){ %><%- include('partials/post-card', { p: p, i: i }) %><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/newsletter') %>
+
+<% if (sec.faq.enabled) { %>
+<!-- ============ FAQ ============ -->
+<section class="section section-alt" id="faq" aria-labelledby="faqTitle">
+  <div class="container faq-wrap">
+    <header class="sec-head reveal">
+      <p class="eyebrow"><%= sec.faq.eyebrow %></p>
+      <h2 id="faqTitle" class="h2"><%= sec.faq.title %></h2>
+      <p class="sub">Can’t find your answer? <button class="link" data-open-contact>Ask us directly</button>.</p>
+    </header>
+    <div class="faq">
+      <% sec.faq.items.forEach(function(f, i){ %>
+        <details class="reveal" style="--d:<%= i * 60 %>ms" <%= i===0 ? 'open' : '' %>><summary><%= f.q %><span class="pm"></span></summary><p><%= f.a %></p></details>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,62 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: ind.headline || ind.title, lead: ind.summary, eyebrow: 'Industries · ' + ind.title.replace(/&/g, '&amp;').replace(/</g, '&lt;'), crumbs: [{ name: 'Industries', url: '/industries' }, { name: ind.title }] }) %>
+
+<section class="section">
+  <div class="container detail">
+    <article class="detail-main">
+      <div class="svc-hero-ic reveal"><%- icon(ind.icon) %></div>
+      <div class="prose reveal"><%- md(ind.body) %></div>
+
+      <div class="cs-grid">
+        <% if (ind.challenges && ind.challenges.length) { %>
+        <div class="cs-card cs-challenge reveal">
+          <h2 class="h3">Challenges we solve</h2>
+          <ul><% ind.challenges.forEach(function(c){ %><li><span class="x">!</span><%= c %></li><% }) %></ul>
+        </div>
+        <% } %>
+        <% if (ind.solutions && ind.solutions.length) { %>
+        <div class="cs-card cs-solution reveal" style="--d:100ms">
+          <h2 class="h3">What we deliver</h2>
+          <ul><% ind.solutions.forEach(function(c){ %><li><%- icon('check') %><%= c %></li><% }) %></ul>
+        </div>
+        <% } %>
+      </div>
+
+      <% if (related.length) { %>
+        <h2 class="h3 reveal">Services for <%= ind.title.toLowerCase() %></h2>
+        <div class="mini-svc">
+          <% related.forEach(function(sv, i){ %>
+            <a class="mini-svc-card reveal" style="--d:<%= i * 60 %>ms" href="/services/<%= sv.slug %>"><span class="svc-ic"><%- icon(sv.icon) %></span><span><strong><%= sv.title %></strong><small><%= clip(sv.summary, 90) %></small></span></a>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <div class="inline-cta reveal">
+        <div><h3>Let’s transform <%= ind.title.toLowerCase() %> together</h3><p>Free consultation, clear estimate, no obligation.</p></div>
+        <button class="btn btn-orange" data-open-contact>Discuss your project <%- icon('arrow') %></button>
+      </div>
+    </article>
+
+    <aside class="detail-side">
+      <div class="side-card sticky">
+        <h3>Other industries</h3>
+        <ul class="side-list">
+          <% others.forEach(function(x){ %><li><a href="/industries/<%= x.slug %>"><%- icon(x.icon) %><%= x.title %></a></li><% }) %>
+        </ul>
+        <button class="btn btn-primary btn-block" data-open-contact>Get a free consultation</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<% if (projects.length) { %>
+<section class="section section-alt">
+  <div class="container">
+    <header class="sec-head sec-head-row reveal"><div><p class="eyebrow">Case studies</p><h2 class="h2">Our work in <%= ind.title.toLowerCase() %></h2></div><a class="btn btn-ghost" href="/portfolio">View portfolio <%- icon('arrow') %></a></header>
+    <div class="pf-grid"><% projects.forEach(function(p, i){ %><%- include('partials/project-card', { p: p, i: i }) %><% }) %></div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

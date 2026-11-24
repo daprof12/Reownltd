@@ -1,0 +1,35 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: cat ? cat + ' articles' : 'Blog & insights', lead: 'Ideas, guides and news on AI, software, automation, blockchain, security and digital transformation.', eyebrow: 'Insights', crumbs: [{ name: 'Blog' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="blog-tools reveal">
+      <div class="filters" aria-label="Categories">
+        <a class="filter <%= !cat ? 'active' : '' %>" href="/blog">All</a>
+        <% cats.forEach(function(c){ %><a class="filter <%= cat===c ? 'active' : '' %>" href="/blog?category=<%= encodeURIComponent(c) %>"><%= c %></a><% }) %>
+      </div>
+      <form class="search" action="/blog" role="search">
+        <input type="search" name="q" value="<%= q %>" placeholder="Search articles…" aria-label="Search articles">
+        <% if (cat) { %><input type="hidden" name="category" value="<%= cat %>"><% } %>
+      </form>
+    </div>
+
+    <% if (list.length) { %>
+      <div class="post-grid"><% list.forEach(function(p, i){ %><%- include('partials/post-card', { p: p, i: i }) %><% }) %></div>
+    <% } else { %>
+      <p class="empty">No articles found<%= q ? ' for “' + q + '”' : '' %>.</p>
+    <% } %>
+
+    <% if (pages > 1) { %>
+      <nav class="pager" aria-label="Pagination">
+        <% for (var n = 1; n <= pages; n++) { %>
+          <a href="?<%= cat ? 'category=' + encodeURIComponent(cat) + '&' : '' %><%= q ? 'q=' + encodeURIComponent(q) + '&' : '' %>page=<%= n %>" class="<%= n===page?'active':'' %>"><%= n %></a>
+        <% } %>
+      </nav>
+    <% } %>
+  </div>
+</section>
+
+<%- include('partials/newsletter') %>
+<%- include('partials/footer') %>

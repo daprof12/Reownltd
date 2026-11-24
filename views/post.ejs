@@ -1,0 +1,40 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: p.title, lead: p.excerpt, eyebrow: '<a href="/blog?category=' + encodeURIComponent(p.category) + '">' + p.category.replace(/</g,'&lt;') + '</a> · ' + fmtDate(p.publishedAt) + ' · ' + readTime(p.body) + ' min read', crumbs: [{ name: 'Blog', url: '/blog' }, { name: p.title }] }) %>
+
+<section class="section section-tight">
+  <div class="container narrow">
+    <div class="reveal"><%- include('partials/cover', { item: p, big: true, eager: true }) %></div>
+    <article class="prose post-content reveal">
+      <%- md(p.body) %>
+    </article>
+    <div class="post-foot">
+      <p class="author"><span class="brand-mark"><img src="/img/logo-mark.webp" alt="" width="45" height="30"></span><span>Written by <strong><%= p.author || s.siteName %></strong></span></p>
+      <div class="share">
+        <span>Share:</span>
+        <a target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url=<%= encodeURIComponent(seo.canonical) %>" aria-label="Share on LinkedIn"><%- icon('linkedin') %></a>
+        <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=<%= encodeURIComponent(seo.canonical) %>&text=<%= encodeURIComponent(p.title) %>" aria-label="Share on X"><%- icon('x') %></a>
+        <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(seo.canonical) %>" aria-label="Share on Facebook"><%- icon('facebook') %></a>
+        <a target="_blank" rel="noopener" href="https://wa.me/?text=<%= encodeURIComponent(p.title + ' ' + seo.canonical) %>" aria-label="Share on WhatsApp"><%- icon('whatsapp') %></a>
+      </div>
+    </div>
+    <% if (p.tags && p.tags.length) { %><p class="tags"><% p.tags.forEach(function(t){ %><a class="pill" href="/blog?q=<%= encodeURIComponent(t) %>"><%= t %></a><% }) %></p><% } %>
+    <div class="inline-cta reveal">
+      <div><h3>Have a project in mind?</h3><p>Turn ideas into secure, scalable software with Reown.</p></div>
+      <button class="btn btn-orange" data-open-contact>Talk to our team <%- icon('arrow') %></button>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/newsletter') %>
+
+<% if (related.length) { %>
+<section class="section section-alt">
+  <div class="container">
+    <header class="sec-head reveal"><h2 class="h2">Related articles</h2></header>
+    <div class="post-grid"><% related.forEach(function(x, i){ %><%- include('partials/post-card', { p: x, i: i }) %><% }) %></div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,40 @@
+<header class="site-header" id="top">
+  <div class="container nav">
+    <a href="/" class="brand" aria-label="<%= s.siteName %> home">
+      <span class="brand-mark"><img src="/img/logo-mark.webp" alt="" width="54" height="36"></span>
+      <span class="brand-text"><strong>Reown</strong><small>LTD</small></span>
+    </a>
+
+    <nav class="menu" id="menu" aria-label="Main">
+      <a href="/#about" class="<%= path==='/' ? '' : '' %>">About</a>
+      <div class="has-drop">
+        <a href="/#services" aria-haspopup="true">Services <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="drop">
+          <% navServices.forEach(function(sv){ %>
+            <a href="/services/<%= sv.slug %>"><span class="drop-ic"><%- icon(sv.icon) %></span><span><strong><%= sv.title %></strong><small><%= clip(sv.summary, 64) %></small></span></a>
+          <% }) %>
+        </div>
+      </div>
+      <a href="/portfolio" class="<%= path.startsWith('/portfolio') ? 'active' : '' %>">Portfolio</a>
+      <div class="has-drop">
+        <a href="/industries" aria-haspopup="true" class="<%= path.startsWith('/industries') ? 'active' : '' %>">Industries <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="drop">
+          <% navIndustries.forEach(function(it){ %>
+            <a href="/industries/<%= it.slug %>"><span class="drop-ic"><%- icon(it.icon) %></span><span><strong><%= it.title %></strong><small><%= clip(it.summary, 64) %></small></span></a>
+          <% }) %>
+        </div>
+      </div>
+      <a href="/blog" class="<%= path.startsWith('/blog') ? 'active' : '' %>">Blog</a>
+      <a href="/#faq">FAQ</a>
+      <button class="btn btn-primary menu-cta" data-open-contact>Start a project</button>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle colour theme"><span class="i-sun"><%- icon('sun') %></span><span class="i-moon"><%- icon('moon') %></span></button>
+      <button class="btn btn-primary hide-sm" data-open-contact>Let’s talk <%- icon('arrow') %></button>
+      <button class="icon-btn burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+<main id="main">

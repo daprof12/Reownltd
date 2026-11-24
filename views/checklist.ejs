@@ -1,0 +1,45 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: 'Digital Transformation Checklist', lead: '25 practical checks to plan, build and secure your organisation’s digital transformation. Tick them off as you go — your progress is saved in this browser.', eyebrow: 'Free resource', crumbs: [{ name: 'Resources' }, { name: 'Digital Transformation Checklist' }] }) %>
+
+<% var groups = [
+  { t: 'Strategy & leadership', i: 'spark', items: ['Clear business goals for digital (cost, revenue, service quality) are written down', 'An executive sponsor owns the transformation', 'Top 3 high-impact, low-risk use cases are prioritised', 'Budget is planned in phases, not one big bang', 'Success metrics (KPIs) are agreed before building'] },
+  { t: 'Processes & data', i: 'automation', items: ['Key processes are mapped and bottlenecks identified', 'Repetitive manual tasks are listed for automation', 'Data sources are inventoried and owners assigned', 'There is a single source of truth for core records', 'Data is backed up and restores are tested'] },
+  { t: 'Technology & AI', i: 'ai', items: ['Existing systems are audited for integration (APIs) and age', 'Cloud vs on-premise decision is documented', 'Mobile access is planned for staff and customers', 'AI opportunities are evaluated against real data and risk', 'Vendors provide source code, documentation and handover'] },
+  { t: 'Security & compliance', i: 'shield', items: ['Multi-factor authentication is enforced everywhere', 'Data-protection obligations (e.g. NDPA/GDPR) are mapped', 'Access is role-based and reviewed regularly', 'A penetration test is planned before go-live', 'An incident response plan exists and is rehearsed'] },
+  { t: 'People & change', i: 'users', items: ['Staff are trained before and after launch', 'Champions in each department support adoption', 'Users are involved in design and testing', 'Feedback channels are in place after launch', 'A support/maintenance plan (SLA) is agreed'] },
+]; var n = 0; %>
+
+<section class="section">
+  <div class="container narrow">
+    <div class="cl-head reveal">
+      <div class="cl-progress"><span id="clBar"></span></div>
+      <p><strong id="clCount">0</strong> of 25 complete</p>
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+    <% groups.forEach(function(g, gi){ %>
+      <div class="cl-group reveal" style="--d:<%= gi * 60 %>ms">
+        <h2 class="h3"><span class="cl-ic"><%- icon(g.i) %></span><%= g.t %></h2>
+        <% g.items.forEach(function(it){ n++; %>
+          <label class="cl-item"><input type="checkbox" data-cl="<%= n %>"><span class="box"><%- icon('check') %></span><span><%= it %></span></label>
+        <% }) %>
+      </div>
+    <% }) %>
+    <div class="inline-cta reveal">
+      <div><h3>Want an expert to review your checklist?</h3><p>Book a free 30-minute digital readiness session with Reown.</p></div>
+      <button class="btn btn-orange" data-open-contact>Book a free session <%- icon('arrow') %></button>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/newsletter') %>
+<script>
+(function(){
+  var boxes = [].slice.call(document.querySelectorAll('[data-cl]')), key = 'reown-checklist', saved = {};
+  try { saved = JSON.parse(localStorage.getItem(key) || '{}'); } catch (e) {}
+  function upd(){ var c = boxes.filter(function(b){return b.checked}).length; document.getElementById('clCount').textContent = c; document.getElementById('clBar').style.width = (c / boxes.length * 100) + '%'; }
+  boxes.forEach(function(b){ b.checked = !!saved[b.dataset.cl]; b.addEventListener('change', function(){ saved[b.dataset.cl] = b.checked; try { localStorage.setItem(key, JSON.stringify(saved)); } catch (e) {} upd(); }); });
+  upd();
+})();
+</script>
+<%- include('partials/footer') %>

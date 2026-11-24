@@ -1,0 +1,11 @@
+<section class="page-hero">
+  <div class="hero-bg" aria-hidden="true"><div class="grid-bg"></div><span class="blob b1"></span><span class="blob b2"></span></div>
+  <div class="container">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a><% (crumbs||[]).forEach(function(c){ %><span>/</span><% if (c.url) { %><a href="<%= c.url %>"><%= c.name %></a><% } else { %><span aria-current="page"><%= c.name %></span><% } %><% }) %>
+    </nav>
+    <% if (locals.eyebrow) { %><p class="eyebrow fade-up"><%- eyebrow %></p><% } %>
+    <h1 class="fade-up d1"><%= title %></h1>
+    <% if (locals.lead) { %><p class="lead fade-up d2"><%= lead %></p><% } %>
+  </div>
+</section>

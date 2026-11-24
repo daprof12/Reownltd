@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: 'Industries we serve', lead: 'Deep sector knowledge combined with AI, software, hardware and security expertise — so you get solutions that fit your regulations, users and goals.', eyebrow: 'Who we serve', crumbs: [{ name: 'Industries' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="ind-grid">
+      <% list.forEach(function(it, i){ %><%- include('partials/industry-card', { it: it, i: i }) %><% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="inline-cta reveal">
+      <div><h3>Don’t see your industry?</h3><p>We adapt our platforms to any sector. Tell us about your challenge.</p></div>
+      <button class="btn btn-orange" data-open-contact>Talk to an expert <%- icon('arrow') %></button>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

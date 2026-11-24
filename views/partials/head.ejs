@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title><%= seo.title %></title>
+  <meta name="description" content="<%= seo.description %>">
+  <meta name="keywords" content="<%= seo.keywords %>">
+  <meta name="author" content="<%= s.siteName %>">
+  <meta name="robots" content="<%= seo.noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' %>">
+  <link rel="canonical" href="<%= seo.canonical %>">
+  <meta name="theme-color" content="#F8FAFF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#071440" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <% if (s.analytics.googleVerification) { %><meta name="google-site-verification" content="<%= s.analytics.googleVerification %>"><% } %>
+  <% if (s.analytics.bingVerification) { %><meta name="msvalidate.01" content="<%= s.analytics.bingVerification %>"><% } %>
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:site_name" content="<%= s.siteName %>">
+  <meta property="og:type" content="<%= seo.type %>">
+  <meta property="og:title" content="<%= seo.title %>">
+  <meta property="og:description" content="<%= seo.description %>">
+  <meta property="og:url" content="<%= seo.canonical %>">
+  <meta property="og:image" content="<%= seo.image %>">
+  <meta property="og:image:alt" content="<%= s.siteName %> — <%= s.tagline %>">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <% if (s.seo.twitterHandle) { %><meta name="twitter:site" content="<%= s.seo.twitterHandle %>"><% } %>
+  <meta name="twitter:title" content="<%= seo.title %>">
+  <meta name="twitter:description" content="<%= seo.description %>">
+  <meta name="twitter:image" content="<%= seo.image %>">
+
+  <link rel="icon" type="image/webp" href="/img/logo-mark.webp">
+  <link rel="apple-touch-icon" href="/img/logo-mark.webp">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="<%= s.siteName %> Blog" href="/rss.xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="/img/logo-mark.webp">
+  <link rel="stylesheet" href="/css/site.css?v=1">
+
+  <script>
+    // Apply saved theme before paint (no flash)
+    (function (d) {
+      d.classList.remove('no-js');
+      var t = null; try { t = localStorage.getItem('reown-theme'); } catch (e) {}
+      if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+    })(document.documentElement);
+  </script>
+  <script type="application/ld+json"><%- seo.jsonLd %></script>
+
+  <% if (s.analytics.gaId) { %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= s.analytics.gaId %>"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= s.analytics.gaId %>');</script>
+  <% } %>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>

@@ -1,0 +1,9 @@
+node_modules/
+.env
+.claude/settings.local.json
+
+# Live content, leads and subscribers — never commit (private data)
+data/*
+!data/.gitkeep
+uploads/*
+!uploads/.gitkeep

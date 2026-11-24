@@ -1,0 +1,22 @@
+<% var n = s.newsletter || {}; if (n.enabled) { %>
+<section class="section section-tight" aria-labelledby="nlTitle">
+  <div class="container">
+    <div class="nl-band reveal">
+      <div class="nl-copy">
+        <span class="nl-ic"><%- icon('mail') %></span>
+        <div>
+          <h2 id="nlTitle"><%= n.title %></h2>
+          <p><%= n.text %></p>
+        </div>
+      </div>
+      <form class="nl-form" novalidate>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="sr" for="nlEmail">Email address</label>
+        <input id="nlEmail" type="email" name="email" placeholder="Your work email" autocomplete="email" required>
+        <button class="btn btn-orange" type="submit"><%= n.button || 'Subscribe' %></button>
+        <p class="nl-msg" role="status" hidden></p>
+      </form>
+    </div>
+  </div>
+</section>
+<% } %>

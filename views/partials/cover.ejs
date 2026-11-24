@@ -1,0 +1,12 @@
+<% var h = 0; for (var i = 0; i < (item.title||'').length; i++) h = (h * 31 + item.title.charCodeAt(i)) % 360; %>
+<div class="cover <%= locals.big ? 'cover-big' : '' %>">
+  <% if (item.cover) { %>
+    <img src="<%= item.cover %>" alt="<%= item.title %>" loading="<%= locals.eager ? 'eager' : 'lazy' %>" decoding="async">
+  <% } else { %>
+    <div class="cover-gen" style="--h:<%= h %>" role="img" aria-label="<%= item.title %>">
+      <span class="cg-orb"></span><span class="cg-swoosh"></span>
+      <span class="cg-px"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="cg-label"><%= item.category || item.industry || 'Reown' %></span>
+    </div>
+  <% } %>
+</div>

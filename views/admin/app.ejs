@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Reown CMS</title>
+  <link rel="icon" href="/img/logo-mark.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css?v=1">
+</head>
+<body>
+  <div class="layout">
+    <aside class="side" id="side">
+      <a class="side-brand" href="#/"><span class="bm"><img src="/img/logo-mark.webp" alt=""></span><span><strong>Reown</strong><small>CMS</small></span></a>
+      <nav id="nav">
+        <a href="#/" data-route="">Dashboard</a>
+        <a href="#/leads" data-route="leads">Leads <span class="badge" id="leadBadge" hidden></span></a>
+        <a href="#/subscribers" data-route="subscribers">Subscribers</a>
+        <p class="nav-h">Content</p>
+        <a href="#/portfolio" data-route="portfolio">Portfolio</a>
+        <a href="#/posts" data-route="posts">Blog posts</a>
+        <a href="#/services" data-route="services">Services</a>
+        <a href="#/industries" data-route="industries">Industries</a>
+        <a href="#/sections" data-route="sections">Page sections</a>
+        <a href="#/media" data-route="media">Media library</a>
+        <p class="nav-h">Site</p>
+        <a href="#/settings" data-route="settings">Settings &amp; SEO</a>
+        <a href="/" target="_blank" rel="noopener">View website ↗</a>
+      </nav>
+      <form method="post" action="/admin/logout"><button class="btn btn-ghost btn-block">Sign out</button></form>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <button class="icon-btn" id="sideToggle" aria-label="Menu">☰</button>
+        <h1 id="pageTitle">Dashboard</h1>
+        <div id="topActions"></div>
+      </header>
+      <section id="view" class="view"></section>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+  <div id="dlg" class="dlg" hidden><div class="dlg-bg" data-dlg-close></div><div class="dlg-panel" id="dlgPanel"></div></div>
+  <script>window.ICONS = <%- JSON.stringify(icons) %>;</script>
+  <script src="/js/admin.js?v=1"></script>
+</body>
+</html>

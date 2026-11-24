@@ -1,0 +1,18 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/page-hero', { title: 'Portfolio & case studies', lead: 'Real solutions for governments, enterprises and businesses — across AI, software, mobile, blockchain, IoT and security.', eyebrow: 'Our work', crumbs: [{ name: 'Portfolio' }] }) %>
+
+<section class="section">
+  <div class="container">
+    <div class="filters reveal" role="tablist" aria-label="Filter projects">
+      <button class="filter active" data-filter="*">All</button>
+      <% cats.forEach(function(c){ %><button class="filter" data-filter="<%= c %>"><%= c %></button><% }) %>
+    </div>
+    <div class="pf-grid" id="pfGrid">
+      <% projects.forEach(function(p, i){ %><%- include('partials/project-card', { p: p, i: i }) %><% }) %>
+    </div>
+    <% if (!projects.length) { %><p class="empty">Projects coming soon.</p><% } %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

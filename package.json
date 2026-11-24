@@ -1,0 +1,28 @@
+{
+  "name": "reown-website",
+  "version": "1.0.0",
+  "description": "Reown Ltd corporate website with built-in CMS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "compression": "^1.8.2",
+    "dotenv": "^18.0.10",
+    "ejs": "^7.0.2",
+    "express": "^4.22.3",
+    "express-session": "^1.19.0",
+    "marked": "^18.2.1",
+    "multer": "^2.5.0",
+    "nodemailer": "^10.6.1",
+    "slugify": "^1.6.9"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
