@@ -29,5 +29,11 @@
     "LEADS_TO": "info@reownltd.com"
   },
 
+  // Live domains. reownltd.com redirects to www in src/worker.mjs.
+  "routes": [
+    { "pattern": "www.reownltd.com", "custom_domain": true },
+    { "pattern": "reownltd.com", "custom_domain": true }
+  ],
+
   "observability": { "enabled": true }
 }
