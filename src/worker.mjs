@@ -464,7 +464,20 @@ async function handle(req, env, ctx) {
 export default {
   async fetch(req, env, ctx) {
     try {
-      return await handle(req, env, ctx);
+      const url = new URL(req.url);
+      // One canonical host: reownltd.com → https://www.reownltd.com (keeps path + query)
+      const canonical = env.SITE_URL ? new URL(env.SITE_URL) : null;
+      if (canonical && url.hostname !== canonical.hostname && url.hostname === canonical.hostname.replace(/^www\./, '')) {
+        return Response.redirect(canonical.origin + url.pathname + url.search, 301);
+      }
+      const res = await handle(req, env, ctx);
+      // Keep the temporary *.workers.dev address out of search results
+      if (url.hostname.endsWith('.workers.dev')) {
+        const out = new Response(res.body, res);
+        out.headers.set('X-Robots-Tag', 'noindex, nofollow');
+        return out;
+      }
+      return res;
     } catch (err) {
       console.error(err && err.stack || err);
       if (new URL(req.url).pathname.startsWith('/api/')) return json({ error: 'Server error' }, 500);

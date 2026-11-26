@@ -6,7 +6,7 @@
   "compatibility_date": "2025-09-01",
 
   // Precompile EJS views before every dev/deploy (Workers can't compile templates at runtime)
-  "build": { "command": "node scripts/build-templates.js" },
+  "build": { "command": "node scripts/build-templates.js", "watch_dir": ["views", "scripts"] },
 
   // CSS, JS and images in /public are served directly by Cloudflare's CDN
   "assets": { "directory": "./public" },
