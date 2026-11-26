@@ -467,6 +467,10 @@ export default {
       const url = new URL(req.url);
       // One canonical host: reownltd.com → https://www.reownltd.com (keeps path + query)
       const canonical = env.SITE_URL ? new URL(env.SITE_URL) : null;
+      // Always HTTPS on the real domain (localhost dev stays on http)
+      if (url.protocol === 'http:' && canonical && url.hostname.endsWith(canonical.hostname.replace(/^www\./, ''))) {
+        return Response.redirect(canonical.origin + url.pathname + url.search, 301);
+      }
       if (canonical && url.hostname !== canonical.hostname && url.hostname === canonical.hostname.replace(/^www\./, '')) {
         return Response.redirect(canonical.origin + url.pathname + url.search, 301);
       }
