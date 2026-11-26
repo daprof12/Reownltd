@@ -38,12 +38,51 @@ npx wrangler secret put SESSION_SECRET
 | `MAIL_FROM` | *Optional.* Sender address for those emails, e.g. `Reown Website <website@reownltd.com>` |
 
 ## Connect reownltd.com
-1. Add `reownltd.com` to Cloudflare: go to **Websites → Add a site** and choose the Free plan. Cloudflare then gives you two nameservers. Set them at your domain registrar, replacing the current ones.
-2. Wait until the domain shows **Active** in Cloudflare. This takes minutes to a few hours.
-3. Open **Workers & Pages → reownltd → Settings → Domains & Routes → Add → Custom domain**. Add `www.reownltd.com`, then add `reownltd.com` the same way.
-4. HTTPS is issued automatically.
+The domain is registered at **Hostinger**, and the **info@reownltd.com** mailbox is Hostinger Email. These steps move only the DNS to Cloudflare. Hostinger stays your registrar and your email host.
 
-Before switching nameservers, check that Cloudflare imported your **MX records**, or email to info@reownltd.com will stop working.
+### A. Add the domain to Cloudflare
+1. In the Cloudflare dashboard, click **Add → Connect a domain**, enter `reownltd.com` and choose the **Free** plan.
+2. Cloudflare scans your current DNS records. **Check that these email records are in the list.** Add any that are missing:
+
+   | Type | Name | Content | Proxy |
+   |---|---|---|---|
+   | MX | `@` | `mx1.hostinger.com` (priority 5) | — |
+   | MX | `@` | `mx2.hostinger.com` (priority 10) | — |
+   | TXT | `@` | `v=spf1 include:_spf.mail.hostinger.com ~all` | — |
+   | CNAME | `hostingermail-a._domainkey` | `hostingermail-a.dkim.mail.hostinger.com` | **DNS only** (grey cloud) |
+   | CNAME | `hostingermail-b._domainkey` | `hostingermail-b.dkim.mail.hostinger.com` | **DNS only** |
+   | CNAME | `hostingermail-c._domainkey` | `hostingermail-c.dkim.mail.hostinger.com` | **DNS only** |
+   | CNAME | `autodiscover` | `autodiscover.mail.hostinger.com` | **DNS only** |
+   | CNAME | `autoconfig` | `autoconfig.mail.hostinger.com` | **DNS only** |
+
+3. **Delete** the old website records: the **A** record for `@` pointing to `2.57.91.91` and the **CNAME** for `www`. The Worker replaces them.
+4. **Recommended:** add a DMARC record so your emails are less likely to land in spam:
+
+   | Type | Name | Content |
+   |---|---|---|
+   | TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:info@reownltd.com` |
+
+### B. Point Hostinger at Cloudflare
+1. In **Hostinger hPanel**, open **Domains → reownltd.com → DNS / Nameservers → Change nameservers**.
+2. Choose **Use custom nameservers**, enter the **two nameservers Cloudflare shows you** (e.g. `xxx.ns.cloudflare.com`), and save.
+3. If Hostinger has **DNSSEC** turned on for the domain, turn it off first. You can turn it on again later from Cloudflare.
+4. Wait for Cloudflare to email you that the domain is **Active**. This takes from minutes up to 24 hours.
+
+### C. Attach the domain to the Worker
+Choose **one** of these:
+- **Dashboard:** go to **Workers & Pages → reownltd → Settings → Domains & Routes → Add → Custom domain**. Add `www.reownltd.com`, then `reownltd.com`.
+- **Config:** add the routes below to `wrangler.jsonc` and push. Only do this once the domain is Active, or the build fails.
+  ```jsonc
+  "routes": [
+    { "pattern": "www.reownltd.com", "custom_domain": true },
+    { "pattern": "reownltd.com", "custom_domain": true }
+  ]
+  ```
+
+HTTPS certificates are issued automatically. `reownltd.com` redirects to `https://www.reownltd.com`, which is handled in the Worker code.
+
+### D. Check email still works
+Send a test email to **info@reownltd.com** from Gmail, and reply from Hostinger webmail. Both should arrive.
 
 ## Local development
 ```powershell
